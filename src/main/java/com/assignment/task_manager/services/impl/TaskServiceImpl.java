@@ -2,6 +2,7 @@ package com.assignment.task_manager.services.impl;
 
 import com.assignment.task_manager.advice.ResponsePayload;
 import com.assignment.task_manager.dto.TaskDTO;
+import com.assignment.task_manager.dto.enums.TaskStatus;
 import com.assignment.task_manager.entity.Task;
 import com.assignment.task_manager.entity.User;
 import com.assignment.task_manager.repo.TaskRepository;
@@ -51,9 +52,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ResponsePayload getAllTask(Pageable pageable) {
+    public ResponsePayload getAllTask(Pageable pageable, String statusFilter) {
         String userId = "32cedb0a-eb87-4110-9182-240ddc0d3f67";
-        Page<Task> allTasks = taskRepository.findByUser_Id(userId, pageable);
+        Page<Task> allTasks;
+
+        if ("All".equalsIgnoreCase(statusFilter)) {
+            // If "All", retrieve tasks without filtering by status
+            allTasks = taskRepository.findByUser_Id(userId, pageable);
+        } else {
+            // Otherwise, filter by the specific status
+            TaskStatus status = TaskStatus.valueOf(statusFilter.toUpperCase());
+            allTasks = taskRepository.findByUser_IdAndStatusIn(userId, List.of(status), pageable);
+        }
+
 
         List<TaskDTO> taskDTOs = allTasks.getContent()
                 .stream()

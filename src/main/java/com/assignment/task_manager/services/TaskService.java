@@ -11,5 +11,5 @@ public interface TaskService {
 
     ResponsePayload deleteTask(Long id);
 
-    ResponsePayload getAllTask(Pageable pageable);
+    ResponsePayload getAllTask(Pageable pageable, String status);
 }

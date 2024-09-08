@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/task")
 @Slf4j
+@CrossOrigin
 public class TaskController {
 
     private final TaskService taskService;
@@ -44,10 +45,11 @@ public class TaskController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "priority") String sortBy,
-            @RequestParam(defaultValue = "asc") String order
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(defaultValue = "All") String status
     ) {
         Sort sort = Sort.by(Sort.Direction.fromString(order), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        return ResponseEntity.status(HttpStatus.OK).body(taskService.getAllTask(pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.getAllTask(pageable,status));
     }
 }

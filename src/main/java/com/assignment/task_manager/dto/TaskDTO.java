@@ -42,6 +42,7 @@ public class TaskDTO {
         this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
+        this.dueDate = task.getDueDate();
         this.priority = task.getPriority();
         this.status = task.getStatus();
     }
