@@ -26,7 +26,8 @@ public class SecurityConfig {
     private String issuer;
 
     private final String[] list = {
-            "/auth0/public"
+            "/auth0/public",
+            "/api/v1/auth/**"
     };
 
 
@@ -49,8 +50,9 @@ public class SecurityConfig {
         // @formatter:off
         http.csrf()
                 .disable().cors().and().authorizeRequests()
-                .requestMatchers("/auth0/public").permitAll()
-                .requestMatchers("/auth0/private").authenticated()
+                .requestMatchers(list).permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .oauth2ResourceServer().jwt();
         // @formatter:on

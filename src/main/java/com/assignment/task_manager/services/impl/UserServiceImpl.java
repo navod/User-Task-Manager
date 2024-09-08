@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponsePayload createUser(UserDTO user) {
         User userEntity = modelMapper.map(user, User.class);
-        userEntity.setId(UUID.randomUUID().toString());
         userRepository.save(userEntity);
 
         return new ResponsePayload(HttpStatus.OK.getReasonPhrase(), "User Added", HttpStatus.OK);

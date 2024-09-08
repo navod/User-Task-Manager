@@ -15,21 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private String id;
-    @NotNull
-    @NotEmpty
-    @NotBlank
-    private String firstName;
-    private String lastName;
+    private String userId;
     @NotNull
     @NotEmpty
     @NotBlank
     @Email
     private String email;
-
-    @Size(min = 8, message = "Password must have at least 8 characters")
-    private String password;
-    private boolean status;
-    @Enumerated(EnumType.STRING)
-    private Role role;
 }
