@@ -27,4 +27,10 @@ public class User extends Auditable {
     @JsonIgnore
     private List<Task> tasks;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                '}';
+    }
 }

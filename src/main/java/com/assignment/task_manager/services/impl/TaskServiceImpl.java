@@ -8,18 +8,18 @@ import com.assignment.task_manager.entity.User;
 import com.assignment.task_manager.repo.TaskRepository;
 import com.assignment.task_manager.repo.UserRepository;
 import com.assignment.task_manager.services.TaskService;
+import com.assignment.task_manager.utility.TokenDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +27,14 @@ import java.util.stream.Stream;
 public class TaskServiceImpl implements TaskService {
     private final ModelMapper modelMapper;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     @Override
     public ResponsePayload createTask(TaskDTO taskDTO) {
+        String email = TokenDetails.getEmail();
+        String userId = userRepository.findByEmail(email).getUserId();
+        taskDTO.setUserId(userId);
+
         Task task = modelMapper.map(taskDTO, Task.class);
         taskRepository.save(task);
 
@@ -38,6 +43,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public ResponsePayload updateTask(TaskDTO taskDTO) {
+        String email = TokenDetails.getEmail();
+        String userId = userRepository.findByEmail(email).getUserId();
+        taskDTO.setUserId(userId);
+
         Task task = modelMapper.map(taskDTO, Task.class);
         taskRepository.save(task);
 
@@ -53,16 +62,18 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public ResponsePayload getAllTask(Pageable pageable, String statusFilter) {
-        String userId = "32cedb0a-eb87-4110-9182-240ddc0d3f67";
+        String email = TokenDetails.getEmail();
+        String userId = userRepository.findByEmail(email).getUserId();
+
         Page<Task> allTasks;
 
         if ("All".equalsIgnoreCase(statusFilter)) {
             // If "All", retrieve tasks without filtering by status
-            allTasks = taskRepository.findByUser_Id(userId, pageable);
+            allTasks = taskRepository.findByUser_UserId(userId, pageable);
         } else {
             // Otherwise, filter by the specific status
             TaskStatus status = TaskStatus.valueOf(statusFilter.toUpperCase());
-            allTasks = taskRepository.findByUser_IdAndStatusIn(userId, List.of(status), pageable);
+            allTasks = taskRepository.findByUser_UserIdAndStatusIn(userId, List.of(status), pageable);
         }
 
 

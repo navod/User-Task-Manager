@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    Page<Task> findByUser_Id(String id, Pageable pageable);
+    Page<Task> findByUser_UserId(String id, Pageable pageable);
 
-    Page<Task> findByUser_IdAndStatusIn(String id, List<TaskStatus> statuses, Pageable pageable);
+    Page<Task> findByUser_UserIdAndStatusIn(String id, List<TaskStatus> statuses, Pageable pageable);
 
 }
